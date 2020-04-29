@@ -81,3 +81,9 @@ The files in this repository are made available under the conditions of the
 RolDSIS has been submitted for publication. If you use the software or the
 data of this repository, please give credit.  Stay tuned for more
 information on the eventual acceptation for publication of the manuscript .
+
+## Authors
+
+* Copyright © 2020 [Rafael Laboissière](https://github.com/rlaboiss)
+* Copyright © 2020 [Adrielle de Carvalho Santana](https://github.com/Adrielle-Santana)
+* Copyright © 2020 [Hani Camille Yehia](https://github.com/haniyehia)
