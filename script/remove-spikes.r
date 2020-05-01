@@ -38,7 +38,10 @@ which.outliers <- function (x) {
         k <- k + 1
     }
     ## ** Return value
-    return (t$all.stats$Obs.Num [1 : (k - 1)])
+    if (k == 1)
+        return (NULL)
+    else
+        return (t$all.stats$Obs.Num [1 : (k - 1)])
 }
 
 ### * Remove spikes and return "clean" signal
