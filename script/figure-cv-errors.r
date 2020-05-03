@@ -58,7 +58,8 @@ alpha <- 0.95
 itv <- aggregate (sse.test.norm ~ method * nb.folds, cv.df, function (x) NA)
 lbd <- lambda [itv$nb.folds]
 
-CI <- qnorm (1 - (1 - alpha) / 2) / sqrt (itv$nb.folds * 5)
+n <- itv$nb.folds * 5
+CI <- qt (1 - (1 - alpha) / 2, n - 1) / sqrt (n)
 
 m <- aggregate (sse.test.norm ~ method * nb.folds, cv.df, mean)$sse.test.norm
 s <- aggregate (sse.test.norm ~ method * nb.folds, cv.df, sd)$sse.test.norm
