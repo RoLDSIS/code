@@ -24,8 +24,7 @@ source ("paths.r")
 source ("compare-methods.r")
 
 ### * Initialize output variables
-cv.df <- data.frame (method = c (), subject = c (), nb.folds = c (),
-                     sse.train = c (), sse.test = c ())
+cv.df <- data.frame ()
 cv.results <- list ()
 
 ### * Loop over the cohort
