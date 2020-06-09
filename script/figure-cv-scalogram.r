@@ -27,51 +27,58 @@ source ("dwt-lib.r")
 source ("compare-methods.r")
 source ("scalogram.r")
 
-### * Load the results of the cross-validation procedure
-load (file.path (results.dir, "cross-validation.dat"))
+response <- c ("phy","psy")
 
-### * Open the PDF file
-pdf (file = file.path (figures.dir, "cv-scalograms.pdf"),
-     width = 6, height = 4)
+### * Loop over responses
+for (resp in response) {
 
-### * Specify the panels
-layout (matrix (c (1, 2, 3, 4), nrow = 2),
-        widths = c (1, 0.82), heights = c (0.68, 1))
+    ## * Load the results of the cross-validation procedure
+    load (file.path (results.dir, sprintf("cross-validation-%s.dat", resp)))
 
-### * Counter for panels
-panel <- 1
+    ## ** Open the PDF file
+    pdf (file = file.path (figures.dir, sprintf("cv-scalograms-%s.pdf", resp)),
+         width = 6, height = 4)
 
-### * Loop over the methods
-for (method in names (methods)) {
+    ## ** Specify the panels
+    layout (matrix (c (1, 2, 3, 4), nrow = 2),
+            widths = c (1, 0.82), heights = c (0.68, 1))
 
-    ## ** Cumulate the coefficients values per wavelet
-    cf <- 0
-    for (subj in cohort) {
-        ## *** For RoLDSIS use regression coeeficients for reduced data sets
-        ## For the other methods, use the coefficoents obtained from the
-        ## cross-validation with 3 folds.
-        if (method == "RoLDSIS") {
-            cf.subj <- cv.results [[subj]] [[1]] [[method]] $ coef.full
-            cf.subj <- cf.subj / sum (cf.subj ^ 2)
-            cf <- cf + cf.subj ^ 2
-        } else {
-            cf.subj <- cv.results [[subj]] [[1]] [[method]] $ coef.cv
-            cf.subj <- cf.subj / sum (cf.subj ^ 2)
-            cf <- cf + cf.subj ^ 2
+    ## ** Counter for panels
+    panel <- 1
+
+    ## ** Loop over the methods
+    for (method in names (methods)) {
+
+        ## *** Cumulate the coefficients values per wavelet
+        cf <- 0
+        for (subj in cohort) {
+            ## **** For RoLDSIS use regression coeeficients for reduced data sets
+            ## For the other methods, use the coefficoents obtained from the
+            ## cross-validation with 3 folds.
+            if (method == "RoLDSIS") {
+                cf.subj <- cv.results [[subj]] [[1]] [[method]] $ coef.full
+                cf.subj <- cf.subj / sum (cf.subj ^ 2)
+                cf <- cf + cf.subj ^ 2
+            } else {
+                cf.subj <- cv.results [[subj]] [[1]] [[method]] $ coef.cv
+                cf.subj <- cf.subj / sum (cf.subj ^ 2)
+                cf <- cf + cf.subj ^ 2
+            }
         }
+
+        cf <- sqrt (cf / length (cohort))
+
+        ## *** Plot panel
+        plot.scalogram (vec.to.dwt (cf, dwt.length) , main = method,
+                        x.axis = ifelse (panel == 1 | panel == 3, FALSE, TRUE),
+                        y.axis = ifelse (panel > 2, FALSE, TRUE))
+
+        ## *** Increase counter
+        panel <- panel + 1
+
     }
 
-    cf <- sqrt (cf / length (cohort))
+    ## ** Close the PDF file
+    dummy <- dev.off ()
 
-    ## ** Plot panel
-    plot.scalogram (vec.to.dwt (cf, dwt.length) , main = method,
-                    x.axis = ifelse (panel == 1 | panel == 3, FALSE, TRUE),
-                    y.axis = ifelse (panel > 2, FALSE, TRUE))
-
-    ## ** Increase counter
-    panel <- panel + 1
-
-}
-
-### * Close the PDF file
-dummy <- dev.off ()
+} # resp

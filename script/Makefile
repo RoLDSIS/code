@@ -17,18 +17,22 @@
 ### You should have received a copy of the GNU General Public License along
 ### with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-FIGURES = ../figures/psy-VOT-S09.pdf		\
+FIGURES = ../figures/VOT-S09.pdf		\
           ../figures/erp-VOT-Ativo-S09.pdf	\
-          ../figures/cv-direction-S09.pdf	\
-          ../figures/cv-projections-S09.pdf	\
-          ../figures/cv-errors.pdf		\
-          ../figures/cv-scalograms.pdf
+          ../figures/cv-direction-phy-S09.pdf	\
+	  ../figures/cv-direction-psy-S09.pdf	\
+          ../figures/cv-projections-phy-S09.pdf	\
+          ../figures/cv-projections-psy-S09.pdf	\
+          ../figures/cv-errors-phy.pdf		\
+          ../figures/cv-errors-psy.pdf		\
+          ../figures/cv-scalograms-phy.pdf	\
+          ../figures/cv-scalograms-psy.pdf	\
 
 .PHONY: all
 all: $(FIGURES)
 
 ### Fig. 1 of the manuscript
-../figures/psy-VOT-S09.pdf: figures-id-exp.r
+../figures/VOT-S09.pdf ../results/id-slope.dat: figures-id-exp.r
 	Rscript figures-id-exp.r
 
 ### Fig. 2 of the manuscript
@@ -36,21 +40,24 @@ all: $(FIGURES)
 	Rscript figures-mean-erp.r
 
 ### Figs. 3 and 4 of the manuscript
-../figures/cv-direction-S09.pdf ../figures/cv-projection-S09.pdf: figures-roldsis-results.r
+../figures/cv-direction-phy-S09.pdf	\
+../figures/cv-projection-phy-S09.pdf	\
+../figures/cv-direction-psy-S09.pdf	\
+../figures/cv-projection-psy-S09.pdf: figures-roldsis-results.r ../results/id-slope.dat
 	Rscript figures-roldsis-results.r
 
 ### Cross-validation results
-../results/cross-validation.dat: run-cv.r
+../results/cross-validation-phy.dat ../results/cross-validation-psy.dat: run-cv.r
 	Rscript run-cv.r
 
 ### Fig. 5 of the manuscript
-../figures/cv-errors.pdf: figure-cv-errors.r ../results/cross-validation.dat
+../figures/cv-errors-psy.pdf ../figures/cv-errors-phy.pdf: figure-cv-errors.r ../results/cross-validation-psy.dat
 	Rscript figure-cv-errors.r
 
 ### Fig. 6 of the manuscript
-../figures/cv-scalograms.pdf: figure-cv-scalogram.r
+../figures/cv-scalograms-phy.pdf ../figures/cv-scalograms-psy.pdf: figure-cv-scalogram.r
 	Rscript figure-cv-scalogram.r
 
 .PHONY: clean
 clean:
-	rm -f $(FIGURES) ../results/cross-validation.dat
+	rm -f $(FIGURES) ../results/*.dat

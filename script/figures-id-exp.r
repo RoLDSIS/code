@@ -43,6 +43,9 @@ shift.label <- list (VOT = 5, Formantes = 63)
 ### * Scale for the graphics in the PDF file
 scale <- 0.6
 
+### * Initialize vector for slope of psychometric identification curve
+id.slope <- c ()
+
 ### * Loop over the experimental features
 ### for (feature in experiment.features) {
 for (feature in "VOT") {
@@ -58,7 +61,7 @@ for (feature in "VOT") {
         resp <- id.result$response
 
         ## *** Open the output PDF file and set margins for the plot
-        cairo_pdf (file = file.path (figures.dir, sprintf ("psy-%s-S%02d.pdf",
+        cairo_pdf (file = file.path (figures.dir, sprintf ("%s-S%02d.pdf",
                                                      feature, subj)),
              width = scale * 12, height = scale * 7)
         par (mar = c (5, 4, 1, 0.1))
@@ -73,6 +76,9 @@ for (feature in "VOT") {
         ## *** Fit the psychometric model
         df <- data.frame (stim = stim, resp = resp)
         fit <- glmrob (resp ~ stim, df, family = "binomial")
+
+        ## *** Store slope of psychometric curve (in %/ms)
+        id.slope <- c (id.slope, 25 * coefficients (fit) [2])
 
         ## *** Plot the predict psychometric curve
         pred.stim <- seq (min (stim), max (stim), length.out = 200)
@@ -139,7 +145,10 @@ for (feature in "VOT") {
 cat ("\n")
 flush (stdout ())
 
+### * Save slopes of the psychometric curves
+save (id.slope, file = file.path (results.dir, "id-slope.dat"))
+
 ### * Compose the PDF file with the results for all subjects
-system (sprintf ("pdftk %s/psy-*-S*.pdf cat output %s/psy-all.pdf",
+system (sprintf ("pdftk %s/*-S*.pdf cat output %s/all.pdf",
                  figures.dir, figures.dir))
 

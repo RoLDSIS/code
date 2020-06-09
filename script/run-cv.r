@@ -22,53 +22,69 @@
 ### * Load the local libraries
 source ("paths.r")
 source ("compare-methods.r")
+source ("dwt-parameters.r")
 
 ### * Initialize output variables
 cv.df <- data.frame ()
 cv.results <- list ()
 
+response <- c ("phy", "psy")
+
+### * Loop over responses
+for (resp in response) {
+
 ### * Loop over the cohort
-for (subj in cohort) {
+    for (subj in cohort) {
 
-    ## ** Initialize subject slot
-    cv.results [[subj]] <- list ()
+        ## *** Initialize subject slot
+        cv.results [[subj]] <- list ()
 
-    ## ** Load data for that subject
-    load (cv.filename (cv.exp.feature, cv.exp.type, subj))
+        ## *** Load data for that subject
+        load (cv.filename (cv.exp.feature, cv.exp.type, subj))
 
-    ## ** Loop over the required numbers of folds
-    for (i in seq (1, length (cv.nb.folds))) {
+        ## *** Loop over the required numbers of folds
+        for (i in seq (1, length (cv.nb.folds))) {
 
-        ## ** Get number of folds
-        n <- cv.nb.folds [i]
-        cat (sprintf ("subject: %02d    nb.folds: %d\n", subj, n))
+            ## *** Get number of folds
+            n <- cv.nb.folds [i]
+            cat (sprintf ("subject: %02d    nb.folds: %d\n", subj, n))
 
-        ## ** Get the AER and psychometric responses
-        x <- dwt.coefs.cv$response
-        y <- psycho.resp [dwt.coefs.cv$stimulus]
+            ## *** Get the AER and psychometric responses
+            x <- dwt.coefs.cv$response
 
-        ## ** Run cross-validations
-        r <- compare.methods (x, y, n)
-        cat ("\n")
+            if (resp == "phy")
+                Y <- phy.resp [subj, ]
+            else
+                Y <- psycho.resp
 
-        ## ** Store the results
-        cv.results [[subj]] [[i]] <- r
+            y <- Y [dwt.coefs.cv$stimulus]
 
-        ## ** Compose the output data frame
-        for (j in names (r))
-            cv.df <- rbind (cv.df,
-                            data.frame (method = j,
-                                        subject = subj,
-                                        nb.folds = n,
-                                        sse.train = r [[j]]$sse.train,
-                                        sse.test = mean (r [[j]]$sse.test)))
+            ## ** Run cross-validations
+            r <- compare.methods (x, y, n)
+            cat ("\n")
 
-        ## ** Flush the progress meter
-        flush (stdout ())
+            ## ** Store the results
+            cv.results [[subj]] [[i]] <- r
 
-    }
+            ## ** Compose the output data frame
+            for (j in names (r))
+                cv.df <- rbind (cv.df,
+                                data.frame (method = j,
+                                            subject = subj,
+                                            nb.folds = n,
+                                            sse.train = r [[j]]$sse.train,
+                                            sse.test = mean (r [[j]]$sse.test)))
 
-}
+            ## ** Flush the progress meter
+            flush (stdout ())
 
-### * Save results
-save (file = file.path (results.dir, "cross-validation.dat"), cv.results, cv.df)
+        }
+
+    } # subj
+
+    ## ** Save results
+    save (file = file.path (results.dir,
+                            sprintf ("cross-validation-%s.dat", resp)),
+          cv.results, cv.df)
+
+} # resp

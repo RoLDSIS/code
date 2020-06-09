@@ -27,82 +27,92 @@ source ("compare-methods.r")
 ### * Load system packages
 load.pkgs (c ("lme4", "lmerTest", "merTools", "emmeans"))
 
-### * Load results of cross-validation
-load (file.path (results.dir, "cross-validation.dat"))
+responses <- c ("phy", "psy")
 
-### * Statistical analysis
+### * Loop over responses
+for (resp in responses) {
 
-### ** Add column for normal transformation of errors
-cv.df$sse.test.norm <- rep (NA, nrow (cv.df))
+    ## ** Load results of cross-validation
+    load (file.path (results.dir,
+                     sprintf ("cross-validation-%s.dat", resp)))
 
-### ** Get lambda for chisq to normal transformation
-lambda <- c ()
-for (n in cv.nb.folds) {
-    lambda [n] <- chisq.to.normal (5 * n)
-    idx <- which (cv.df$nb.folds == n)
-    cv.df$sse.test.norm [idx] <- cv.df$sse.test [idx] ^ lambda [n]
-}
+    ## ** Statistical analysis
 
-### ** Run statistical analysis
-fm <- lmer (sse.test.norm ~ method * nb.folds + (1 | subject), cv.df)
-show (anova (fm))
-show (ranova (fm))
-show (pairs (emmeans (fm, "method")))
+    ## *** Add column for normal transformation of errors
+    cv.df$sse.test.norm <- rep (NA, nrow (cv.df))
 
-### * Plot the results
+    ## *** Get lambda for chisq to normal transformation
+    lambda <- c ()
+    for (n in cv.nb.folds) {
+        lambda [n] <- chisq.to.normal (5 * n)
+        idx <- which (cv.df$nb.folds == n)
+        cv.df$sse.test.norm [idx] <- cv.df$sse.test [idx] ^ lambda [n]
+    }
 
-### ** Confidence intervals
+    ## *** Run statistical analysis
+    fm <- lmer (sse.test.norm ~ method * nb.folds + (1 | subject), cv.df)
+    show (anova (fm))
+    show (ranova (fm))
+    show (pairs (emmeans (fm, "method")))
 
-alpha <- 0.95
+    ## ** Plot the results
 
-itv <- aggregate (sse.test.norm ~ method * nb.folds, cv.df, function (x) NA)
-lbd <- lambda [itv$nb.folds]
+    ## *** Confidence intervals
 
-n <- itv$nb.folds * 5
-CI <- qt (1 - (1 - alpha) / 2, n - 1) / sqrt (n)
+    alpha <- 0.95
 
-m <- aggregate (sse.test.norm ~ method * nb.folds, cv.df, mean)$sse.test.norm
-s <- aggregate (sse.test.norm ~ method * nb.folds, cv.df, sd)$sse.test.norm
+    itv <- aggregate (sse.test.norm ~ method * nb.folds, cv.df, function (x) NA)
+    lbd <- lambda [itv$nb.folds]
 
-itv$mean <- m ^ (1 / lbd)
-itv$inf <- (m - s * CI) ^ (1 / lbd)
-itv$sup <- (m + s * CI) ^ (1 / lbd)
+    n <- itv$nb.folds * 5
+    CI <- qt (1 - (1 - alpha) / 2, n - 1) / sqrt (n)
 
-min.v <- min (itv$inf)
-max.v <- max (itv$sup)
+    m <- aggregate (sse.test.norm ~ method * nb.folds, cv.df, mean)$sse.test.norm
+    s <- aggregate (sse.test.norm ~ method * nb.folds, cv.df, sd)$sse.test.norm
 
-### ** Plotting parameters
-pchs <- seq (21, 24)
-cols <- c ("red", "blue", "gold3", "green4")
+    itv$mean <- m ^ (1 / lbd)
+    itv$inf <- (m - s * CI) ^ (1 / lbd)
+    itv$sup <- (m + s * CI) ^ (1 / lbd)
 
-### ** Open the PDF file
-pdf (file = file.path (figures.dir, "cv-errors.pdf"), width = 6, height = 4.2)
-par (mar = c (5, 4, 0.1, 0.1))
+    min.v <- min (itv$inf)
+    max.v <- max (itv$sup)
 
-### ** Start plot without plotting
-plot (itv$mean, ylim = c(min.v, max.v), las = 1, log = "y",
-      ylab = "mean squared error", bty = "n", xaxt = "n",
-      xlab = "number of folds", type = "n")
+    ## *** Plotting parameters
+    pchs <- seq (21, 24)
+    cols <- c ("red", "blue", "gold3", "green4")
 
-### ** Plot regions for folds
-n <- length (methods)
-for (i in seq (1, length (cv.nb.folds)))
-    polygon (i * n + c (-n + 0.5, -n + 0.5, 0.5, 0.5),
-             c (min.v, max.v, max.v, min.v), border = NA,
-             col = ifelse (i %% 2 == 0, "white", "#00000020"))
-axis (1, at = seq (0, length (cv.nb.folds) - 1) * n + (n + 1) / 2,
-      labels = cv.nb.folds)
+    ## *** Open the PDF file
+    pdf (file = file.path (figures.dir,
+                           sprintf ("cv-errors-%s.pdf", resp)),
+         width = 6, height = 4.2)
+    par (mar = c (5, 4, 0.1, 0.1))
 
-### ** Plot data for each fold
-for (i in seq (1, nrow (itv)))
-    lines (c (i, i), c (itv$inf [i], itv$sup [i]), col = cols [itv$method [i]],
-           lwd = 4)
-points (itv$mean, ylim = c(min (itv$inf), max (itv$sup)), cex = 2,
-        pch = pchs [itv$method], bg = cols [itv$method])
+    ## *** Start plot without plotting
+    plot (itv$mean, ylim = c(min.v, max.v), las = 1, log = "y",
+          ylab = "mean squared error", bty = "n", xaxt = "n",
+          xlab = "number of folds", type = "n")
 
-### ** Legend
-legend ("bottomright", ins = 0.05, pch = pchs, pt.bg = cols, pt.cex = 1.5,
-        bg = "white", legend = names (methods))
+    ## *** Plot regions for folds
+    n <- length (methods)
+    for (i in seq (1, length (cv.nb.folds)))
+        polygon (i * n + c (-n + 0.5, -n + 0.5, 0.5, 0.5),
+                 c (min.v, max.v, max.v, min.v), border = NA,
+                 col = ifelse (i %% 2 == 0, "white", "#00000020"))
+    axis (1, at = seq (0, length (cv.nb.folds) - 1) * n + (n + 1) / 2,
+          labels = cv.nb.folds)
 
-### ** Close PDF file
-dummy <- dev.off ()
+    ## *** Plot data for each fold
+    for (i in seq (1, nrow (itv)))
+        lines (c (i, i), c (itv$inf [i], itv$sup [i]), col = cols [itv$method [i]],
+               lwd = 4)
+    points (itv$mean, ylim = c(min (itv$inf), max (itv$sup)), cex = 2,
+            pch = pchs [itv$method], bg = cols [itv$method])
+
+    ## *** Legend
+    legend ("bottomright", ins = 0.05, pch = pchs, pt.bg = cols, pt.cex = 1.5,
+            bg = "white", legend = names (methods))
+
+    ## ** Close PDF file
+    dummy <- dev.off ()
+
+} # resp
