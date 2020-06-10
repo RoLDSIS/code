@@ -61,7 +61,7 @@ for (subj in cohort) {
     for (resp in responses) {
 
         if (resp == "phy")
-            Y <- phy.resp [subj, ]
+            Y <- phy.resp [subj, ] / 200
         else
             Y <- psycho.resp
 
@@ -82,8 +82,8 @@ for (subj in cohort) {
                                               resp, subj)),
              width = 5 * 1.2, height = 3.5 * 1.2)
 
-        layout (matrix (c (1, 2), ncol = 1), heights = c (1, 6))
-        par (mar = c (0, 4, 0.1, 0) + 0.1)
+        layout (matrix (c (1, 2), ncol = 1), heights = c (1.5, 6))
+        par (mar = c (0, 4, 0.75, 0) + 0.1)
 
         x <- vec.to.signal (dir, dwt.length)
         t <- seq (0, by = 1 / eeg.sampfreq, length.out = length (x))

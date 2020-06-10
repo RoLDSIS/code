@@ -24,16 +24,17 @@ source ("paths.r")
 source ("compare-methods.r")
 source ("dwt-parameters.r")
 
-### * Initialize output variables
-cv.df <- data.frame ()
-cv.results <- list ()
-
 response <- c ("phy", "psy")
 
 ### * Loop over responses
 for (resp in response) {
 
-### * Loop over the cohort
+    ## ** Initialize output variables
+    cv.df <- data.frame (method = c (), subject = c (), nb.folds = c (),
+                         sse.train = c (), sse.test = c ())
+    cv.results <- list ()
+
+    ## ** Loop over the cohort
     for (subj in cohort) {
 
         ## *** Initialize subject slot
@@ -53,7 +54,7 @@ for (resp in response) {
             x <- dwt.coefs.cv$response
 
             if (resp == "phy")
-                Y <- phy.resp [subj, ]
+                Y <- phy.resp [subj, ] / 200
             else
                 Y <- psycho.resp
 
