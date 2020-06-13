@@ -17,6 +17,14 @@ The code can be obtained with the following command:
 ```
 git clone https://github.com/RoLDSIS/code RoLDSIS
 ```
+
+N.B.: Developers with write access right to the repository should do,
+instead:
+
+```
+git clone git@github.com:RoLDSIS/code.git RoLDSIS
+```
+
 ## Running the analysis and producing the figures
 
 The system packages `R`, `make`, and `pdftk` are needed.  The necessary
