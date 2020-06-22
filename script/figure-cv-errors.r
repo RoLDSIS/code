@@ -27,7 +27,17 @@ source ("compare-methods.r")
 ### * Load system packages
 load.pkgs (c ("lme4", "lmerTest", "merTools", "emmeans"))
 
+## *** Open the PDF file
+pdf (file = file.path (figures.dir,"cv-errors.pdf"),
+     width = 12, height = 4.2)
+
+layout (matrix (c (1, 2), ncol = 2))
+
 responses <- c ("phy", "psy")
+
+title <- c("PHY","PSY")
+
+panel <- 1
 
 ### * Loop over responses
 for (resp in responses) {
@@ -81,16 +91,14 @@ for (resp in responses) {
     pchs <- seq (21, 24)
     cols <- c ("red", "blue", "gold3", "green4")
 
-    ## *** Open the PDF file
-    pdf (file = file.path (figures.dir,
-                           sprintf ("cv-errors-%s.pdf", resp)),
-         width = 6, height = 4.2)
-    par (mar = c (5, 4, 0.1, 0.1))
+    par (mar = c (4, 4, 1, 0.1))
+
+    y.lab = ifelse (panel > 1, "","mean squared error" )
 
     ## *** Start plot without plotting
     plot (itv$mean, ylim = c(min.v, max.v), las = 1, log = "y",
-          ylab = "mean squared error", bty = "n", xaxt = "n",
-          xlab = "number of folds", type = "n")
+          ylab = y.lab, bty = "n", xaxt = "n",
+          xlab = "number of folds", type = "n", main = title[panel])
 
     ## *** Plot regions for folds
     n <- length (methods)
@@ -112,7 +120,9 @@ for (resp in responses) {
     legend ("bottomright", ins = 0.05, pch = pchs, pt.bg = cols, pt.cex = 1.5,
             bg = "white", legend = names (methods))
 
-    ## ** Close PDF file
-    dummy <- dev.off ()
-
+    ## *** Increase counter
+    panel <- panel + 1
 } # resp
+
+## ** Close PDF file
+dummy <- dev.off ()

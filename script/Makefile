@@ -19,14 +19,10 @@
 
 FIGURES = ../figures/VOT-S09.pdf		\
           ../figures/erp-VOT-Ativo-S09.pdf	\
-          ../figures/cv-direction-phy-S09.pdf	\
-	  ../figures/cv-direction-psy-S09.pdf	\
-          ../figures/cv-projections-phy-S09.pdf	\
-          ../figures/cv-projections-psy-S09.pdf	\
-          ../figures/cv-errors-phy.pdf		\
-          ../figures/cv-errors-psy.pdf		\
-          ../figures/cv-scalograms-phy.pdf	\
-          ../figures/cv-scalograms-psy.pdf	\
+          ../figures/cv-direction-S09.pdf	\
+          ../figures/cv-projections-S09.pdf	\
+          ../figures/cv-errors.pdf		\
+          ../figures/cv-scalograms.pdf	\
 
 .PHONY: all
 all: $(FIGURES)
@@ -40,10 +36,8 @@ all: $(FIGURES)
 	Rscript figures-mean-erp.r
 
 ### Figs. 3 and 4 of the manuscript
-../figures/cv-direction-phy-S09.pdf	\
-../figures/cv-projection-phy-S09.pdf	\
-../figures/cv-direction-psy-S09.pdf	\
-../figures/cv-projection-psy-S09.pdf: figures-roldsis-results.r ../results/id-slope.dat
+../figures/cv-direction-S09.pdf	\
+../figures/cv-projection-S09.pdf: figures-roldsis-results.r ../results/id-slope.dat
 	Rscript figures-roldsis-results.r
 
 ### Cross-validation results
@@ -51,11 +45,11 @@ all: $(FIGURES)
 	Rscript run-cv.r
 
 ### Fig. 5 of the manuscript
-../figures/cv-errors-psy.pdf ../figures/cv-errors-phy.pdf: figure-cv-errors.r ../results/cross-validation-psy.dat
+../figures/cv-errors-psy.pdf: figure-cv-errors.r ../results/cross-validation-psy.dat
 	Rscript figure-cv-errors.r
 
 ### Fig. 6 of the manuscript
-../figures/cv-scalograms-phy.pdf ../figures/cv-scalograms-psy.pdf: figure-cv-scalogram.r
+../figures/cv-scalograms.pdf: figure-cv-scalogram.r
 	Rscript figure-cv-scalogram.r
 
 .PHONY: clean

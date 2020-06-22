@@ -57,6 +57,17 @@ direction <- list ()
 ### * Loop over the cohort
 for (subj in cohort) {
 
+    ## *** Load data for that subject
+    load (cv.filename (cv.exp.feature, cv.exp.type, subj))
+
+    ## *** Generate the scalogram figure
+    pdf (file.path (figures.dir, sprintf ("cv-direction-S%02d.pdf", subj)),
+         width = 10 * 1.2, height = 3.5 * 1.2)
+
+    layout (matrix (c (1, 2, 3, 4), ncol = 2), heights = c (1.5, 6, 1.5, 6))
+
+    panel <- 1
+        
     ### ** Loop over responses
     for (resp in responses) {
 
@@ -64,9 +75,6 @@ for (subj in cohort) {
             Y <- phy.resp [subj, ] / 200
         else
             Y <- psycho.resp
-
-        ## *** Load data for that subject
-        load (cv.filename (cv.exp.feature, cv.exp.type, subj))
 
         ## *** Run RolSIS on a single fold and get the results
         folds <- k.folds (dwt.coefs.cv$response, dwt.coefs.cv$stimulus, 1)
@@ -77,14 +85,8 @@ for (subj in cohort) {
 
         direction [[resp]] <- rbind(direction[[resp]], t(dir))
 
-        ## *** Generate the scalogram figure
-        pdf (file.path (figures.dir, sprintf ("cv-direction-%s-S%02d.pdf",
-                                              resp, subj)),
-             width = 5 * 1.2, height = 3.5 * 1.2)
-
-        layout (matrix (c (1, 2), ncol = 1), heights = c (1.5, 6))
         par (mar = c (0, 4, 0.75, 0) + 0.1)
-
+        
         x <- vec.to.signal (dir, dwt.length)
         t <- seq (0, by = 1 / eeg.sampfreq, length.out = length (x))
         time.shift <- 0.024 * max (t)
@@ -93,23 +95,41 @@ for (subj in cohort) {
               xlim = c (0, max (t)) + time.shift)
         abline (h = 0, col = "#00000080")
 
-        plot.scalogram (dwt (x), palette = palette.bwr)
+        plot.scalogram (dwt (x), palette = palette.bwr,
+                        y.axis = ifelse (panel > 1, FALSE, TRUE))
 
-        dummy <- dev.off ()
+        ## *** Increase counter
+        panel <- panel + 1
 
+    }## resp
 
-        ## *** Generate the time-domain projections figure
-        pdf (file.path (figures.dir,
-                        sprintf ("cv-projections-%s-S%02d.pdf", resp, subj)),
-             width = 6, height = 3)
+    dummy <- dev.off ()
 
-        par (mar = c (5, 4, 0, 0) + 0.1)
+    ## *** Generate the time-domain projections figure
+    pdf (file.path (figures.dir,sprintf ("cv-projections-S%02d.pdf", subj)),
+         width = 12, height = 3)
 
-        y.lim <- c (min (signals), max (signals)+0.5)
+    layout (matrix (c (1, 2), ncol = 2), heights = c (2, 2))
+    par (mar = c (4, 4, 1.1, 0) + 0.1)
 
+    panel <- 1
+    
+    ### ** Loop over responses
+    for (resp in responses) {
+        
+        y.lim <- c (min (signals), max (signals)+5)
+
+        if (panel > 1){
+            y.lab <- ""
+            y.axis <- "n"
+        } else{
+            y.lab <- bquote ("amplitude (" * mu * "V)")
+            y.axis <- "s"
+        }
+        
         plot (0, 0, xlim = c (min (t), max (t)), ylim = y.lim, type = "n",
               las = 1, col = cols [1], bty = "n", lwd = 2, main = resp,
-              xlab = "time (s)", ylab = bquote ("amplitude (" * mu * "V)"))
+              xlab = "time (s)", ylab = y.lab, yaxt = y.axis)
         for (i in seq (1, 5))
             lines (t, signals [, i], col = cols [i], lwd = 2)
 
@@ -125,13 +145,16 @@ for (subj in cohort) {
         points (x.start, y.start, cex = 4, pch = 21, bg = "white")
         text (x.start, y.start, labels = seq (1, 5), cex = 1.5)
 
-        dummy <- dev.off ()
-
-        ## *** Progress meter
-        cat (sprintf ("\rResponse: %s    Subject %2d", resp, subj))
-        flush (stdout ())
-
+        ## *** Increase counter
+        panel <- panel + 1
+        
     } # resp
+
+    dummy <- dev.off ()
+
+    ## *** Progress meter
+    cat (sprintf ("\rSubject %2d", subj))
+    flush (stdout ())
 
 } # subj
 
