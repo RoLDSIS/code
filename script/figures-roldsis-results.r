@@ -37,14 +37,14 @@ cols <- col2rgb (stim.cols)
 cols [, 3] <- 0.4 * cols [, 3] # increase saturation of stimulus #3
 cols <- rgb (t (cols / 255), alpha = 0.5)
 
-### Responses
+### * Responses
 responses <- c ("phy", "psy")
 
 ### * Specify the DWT coefficients on which the cross-validation will be done
 nb.wavelets <- 2 * length (dwt (rep (0, dwt.length))@W [[dwt.start.level]])
 idx.wavelets <- seq (dwt.length - nb.wavelets + 1, dwt.length)
 
-### * Settigns for the position of the stimulus labels
+### * Settings for the position of the stimulus labels
 t <- seq (0, by = 1 / eeg.sampfreq, length.out = dwt.length)
 ang <- c (-1, 0.83, 0.3, 0.35, 0.55) * pi
 label.x <- cos (ang) * 0.05
@@ -67,7 +67,7 @@ for (subj in cohort) {
     layout (matrix (c (1, 2, 3, 4), ncol = 2), heights = c (1.5, 6, 1.5, 6))
 
     panel <- 1
-        
+
     ### ** Loop over responses
     for (resp in responses) {
 
@@ -86,7 +86,7 @@ for (subj in cohort) {
         direction [[resp]] <- rbind(direction[[resp]], t(dir))
 
         par (mar = c (0, 4, 0.75, 0) + 0.1)
-        
+
         x <- vec.to.signal (dir, dwt.length)
         t <- seq (0, by = 1 / eeg.sampfreq, length.out = length (x))
         time.shift <- 0.024 * max (t)
@@ -101,7 +101,7 @@ for (subj in cohort) {
         ## *** Increase counter
         panel <- panel + 1
 
-    }## resp
+    } ## resp
 
     dummy <- dev.off ()
 
@@ -113,10 +113,10 @@ for (subj in cohort) {
     par (mar = c (4, 4, 1.1, 0) + 0.1)
 
     panel <- 1
-    
+
     ### ** Loop over responses
     for (resp in responses) {
-        
+
         y.lim <- c (min (signals), max (signals)+5)
 
         if (panel > 1){
@@ -126,7 +126,7 @@ for (subj in cohort) {
             y.lab <- bquote ("amplitude (" * mu * "V)")
             y.axis <- "s"
         }
-        
+
         plot (0, 0, xlim = c (min (t), max (t)), ylim = y.lim, type = "n",
               las = 1, col = cols [1], bty = "n", lwd = 2, main = resp,
               xlab = "time (s)", ylab = y.lab, yaxt = y.axis)
@@ -147,7 +147,7 @@ for (subj in cohort) {
 
         ## *** Increase counter
         panel <- panel + 1
-        
+
     } # resp
 
     dummy <- dev.off ()

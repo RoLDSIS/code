@@ -63,7 +63,7 @@ for (feature in "VOT") {
         ## *** Open the output PDF file and set margins for the plot
         cairo_pdf (file = file.path (figures.dir, sprintf ("%s-S%02d.pdf",
                                                      feature, subj)),
-             width = scale * 12, height = scale * 7)
+                   width = scale * 12, height = scale * 7)
         par (mar = c (5, 4, 1, 0.1))
 
         ## *** Plot the experimental points, with jitter in the y axis

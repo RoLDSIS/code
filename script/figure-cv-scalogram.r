@@ -27,25 +27,22 @@ source ("dwt-lib.r")
 source ("compare-methods.r")
 source ("scalogram.r")
 
-response <- c ("phy","psy")
-title <- c("PHY","PSY")
+response <- c ("phy", "psy")
+title <- c ("PHY", "PSY")
 
 ## ** Open the PDF file
-    pdf (file = file.path (figures.dir, "cv-scalograms.pdf"),
-         width = 12, height = 4)
+pdf (file = file.path (figures.dir, "cv-scalograms.pdf"),
+     width = 12, height = 4)
 
 ### * Loop over responses
 for (resp in response) {
 
-    ## * Load the results of the cross-validation procedure
-    load (file.path (results.dir, sprintf("cross-validation-%s.dat", resp)))
+    ## ** Load the results of the cross-validation procedure
+    load (file.path (results.dir, sprintf ("cross-validation-%s.dat", resp)))
 
     ## ** Specify the panels
-   # layout (matrix (c (1, 2, 3, 4), nrow = 1),
-                                        # widths = c (1, 0.82), heights = c (0.68, 1))
     layout (matrix (c (1, 2, 3, 4), nrow = 1),
             widths = c (1, 1), heights = c (1, 1))
-            #widths = c (1, 0.82), heights = c (0.68, 1))
 
     ## ** Counter for panels
     panel <- 1
@@ -75,17 +72,15 @@ for (resp in response) {
         ## *** Plot panel
         plot.scalogram (vec.to.dwt (cf, dwt.length) , main = method,
                         y.axis = ifelse (panel > 1, FALSE, TRUE))
-        #x.axis = ifelse (panel == 1 | panel == 3, FALSE, TRUE),
 
         ## *** Increase counter
         panel <- panel + 1
 
     }
-    mtext(title[which(resp==response)], line = -2, outer = TRUE, cex=1.5)
+
+    mtext (title [which (resp == response)], line = -2, outer = TRUE, cex = 1.5)
+
 } # resp
 
-    ## ** Close the PDF file
-    dummy <- dev.off ()
-
-
-
+### * Close the PDF file
+dummy <- dev.off ()

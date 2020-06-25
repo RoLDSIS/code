@@ -35,7 +35,7 @@ layout (matrix (c (1, 2), ncol = 2))
 
 responses <- c ("phy", "psy")
 
-title <- c("PHY","PSY")
+title <- c ("PHY", "PSY")
 
 panel <- 1
 
@@ -122,6 +122,7 @@ for (resp in responses) {
 
     ## *** Increase counter
     panel <- panel + 1
+
 } # resp
 
 ## ** Close PDF file
