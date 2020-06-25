@@ -45,7 +45,7 @@ all: $(FIGURES)
 	Rscript run-cv.r
 
 ### Fig. 5 of the manuscript
-../figures/cv-errors-psy.pdf: figure-cv-errors.r ../results/cross-validation-psy.dat
+../figures/cv-errors.pdf: figure-cv-errors.r ../results/cross-validation-psy.dat
 	Rscript figure-cv-errors.r
 
 ### Fig. 6 of the manuscript
