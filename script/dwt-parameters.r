@@ -53,11 +53,11 @@ cv.electrode <- "TP9"
 cv.nb.folds <- seq (3, 6)
 
 ### * Levels of the psychometric curve for determining the five stimuli
-psycho.resp <- c (0, 0.05, 0.5, 0.95, 1)
+psy.out <- c (0, 0.05, 0.5, 0.95, 1)
 
 ### Physical responses of each subject for vot continuum
 vot <- read.csv (file = "../data/identification/VOT/stim-VOT.csv")
-phy.resp <- as.matrix (vot [, c ("stim1", "stim2", "stim3", "stim4", "stim5")])
+phy.out <- as.matrix (vot [, c ("stim1", "stim2", "stim3", "stim4", "stim5")])
 
 ### * Color of stimuli used in cros-validation plots
 stim.cols <- c ("red", "orange", "gray", "green3", "blue")

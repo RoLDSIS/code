@@ -24,7 +24,7 @@ source ("geom-lib.r")
 
 ### * Regression function
 
-roldsis <- function (data.points, response) {
+roldsis <- function (data.points, output) {
 
     ## ** Get the subspace embeding the mean responses for each stimulus
     axes <- sub.space (data.points)
@@ -34,7 +34,7 @@ roldsis <- function (data.points, response) {
 
     B <- cbind (project (data.points, M, axes), rep (1, nrow (data.points)))
 
-    sol <- solve (B, response)
+    sol <- solve (B, output)
     dir <- axes %*% sol [1 : (length (sol) - 1)]
     dir <- dir / sqrt (sum (dir ^ 2))
 

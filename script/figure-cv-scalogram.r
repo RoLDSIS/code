@@ -30,7 +30,7 @@ source ("scalogram.r")
 ### * Load the system library
 load.pkgs ("Cairo")
 
-response <- c ("phy", "psy")
+output <- c ("phy", "psy")
 title <- list (phy = "Φ", psy = "Ψ")
 
 ### * Open the PDF file
@@ -44,8 +44,8 @@ layout (matrix (seq (1, 10), nrow = 2, byrow = TRUE),
 ### * Counter for panels
 panel <- 0
 
-### * Loop over responses
-for (resp in response) {
+### * Loop over output types
+for (out in output) {
 
     ## ** Loop over the methods
     for (method in names (methods)) {
@@ -54,7 +54,7 @@ for (resp in response) {
         panel <- panel + 1
 
         ## ** Load the results of the cross-validation procedure
-        load (file.path (results.dir, sprintf ("cross-validation-%s.dat", resp)))
+        load (file.path (results.dir, sprintf ("cross-validation-%s.dat", out)))
 
         ## *** Cumulate the coefficients values per wavelet
         cf <- 0
@@ -86,9 +86,9 @@ for (resp in response) {
     par (mar = c (ifelse (panel > 4, 5, 0), 0, ifelse (panel > 4, 0, 3), 0))
     plot (0, 0, type = "n", bty = "n", xlab = "", ylab = "",
           xaxt = "n", yaxt = "n")
-    text (0, 0, title [[resp]], adj = c (0.5, 0.5), cex = 3)
+    text (0, 0, title [[out]], adj = c (0.5, 0.5), cex = 2)
 
-} # resp
+} # out
 
 ### * Close the PDF file
 dummy <- dev.off ()

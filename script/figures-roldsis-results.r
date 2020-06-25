@@ -37,8 +37,8 @@ cols <- col2rgb (stim.cols)
 cols [, 3] <- 0.4 * cols [, 3] # increase saturation of stimulus #3
 cols <- rgb (t (cols / 255), alpha = 0.5)
 
-### * Responses
-responses <- c ("phy", "psy")
+### * Output types
+outputs <- c ("phy", "psy")
 
 ### * Specify the DWT coefficients on which the cross-validation will be done
 nb.wavelets <- 2 * length (dwt (rep (0, dwt.length))@W [[dwt.start.level]])
@@ -68,13 +68,13 @@ for (subj in cohort) {
 
     panel <- 1
 
-    ### ** Loop over responses
-    for (resp in responses) {
+    ### ** Loop over output types
+    for (out in outputs) {
 
-        if (resp == "phy")
-            Y <- phy.resp [subj, ] / 200
+        if (out == "phy")
+            Y <- phy.out [subj, ] / 200
         else
-            Y <- psycho.resp
+            Y <- psy.out
 
         ## *** Run RolSIS on a single fold and get the results
         folds <- k.folds (dwt.coefs.cv$response, dwt.coefs.cv$stimulus, 1)
@@ -83,7 +83,7 @@ for (subj in cohort) {
         proj <- sol$projection
         signals <- apply (proj, 1, function (x) vec.to.signal (x, dwt.length))
 
-        direction [[resp]] <- rbind(direction[[resp]], t(dir))
+        direction [[out]] <- rbind(direction[[out]], t(dir))
 
         par (mar = c (0, 4, 0.75, 0) + 0.1)
 
@@ -91,7 +91,7 @@ for (subj in cohort) {
         t <- seq (0, by = 1 / eeg.sampfreq, length.out = length (x))
         time.shift <- 0.024 * max (t)
         plot (t, x, type = "l", bty = "n", lwd = 2, las = 1, xaxt = "n",
-              xlab = "", yaxt = "n", ylab = "", main = resp,
+              xlab = "", yaxt = "n", ylab = "", main = out,
               xlim = c (0, max (t)) + time.shift)
         abline (h = 0, col = "#00000080")
 
@@ -101,7 +101,7 @@ for (subj in cohort) {
         ## *** Increase counter
         panel <- panel + 1
 
-    } ## resp
+    } ## out
 
     dummy <- dev.off ()
 
@@ -114,8 +114,8 @@ for (subj in cohort) {
 
     panel <- 1
 
-    ### ** Loop over responses
-    for (resp in responses) {
+    ### ** Loop over output types
+    for (out in outputs) {
 
         y.lim <- c (min (signals), max (signals)+5)
 
@@ -128,7 +128,7 @@ for (subj in cohort) {
         }
 
         plot (0, 0, xlim = c (min (t), max (t)), ylim = y.lim, type = "n",
-              las = 1, col = cols [1], bty = "n", lwd = 2, main = resp,
+              las = 1, col = cols [1], bty = "n", lwd = 2, main = out,
               xlab = "time (s)", ylab = y.lab, yaxt = y.axis)
         for (i in seq (1, 5))
             lines (t, signals [, i], col = cols [i], lwd = 2)
@@ -148,7 +148,7 @@ for (subj in cohort) {
         ## *** Increase counter
         panel <- panel + 1
 
-    } # resp
+    } # out
 
     dummy <- dev.off ()
 

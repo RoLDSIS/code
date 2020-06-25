@@ -24,10 +24,10 @@ source ("paths.r")
 source ("compare-methods.r")
 source ("dwt-parameters.r")
 
-response <- c ("phy", "psy")
+outputs <- c ("phy", "psy")
 
-### * Loop over responses
-for (resp in response) {
+### * Loop over output types
+for (out in outputs) {
 
     ## ** Initialize output variables
     cv.df <- data.frame (method = c (), subject = c (), nb.folds = c (),
@@ -50,13 +50,13 @@ for (resp in response) {
             n <- cv.nb.folds [i]
             cat (sprintf ("subject: %02d    nb.folds: %d\n", subj, n))
 
-            ## *** Get the AER and psychometric responses
+            ## *** Get the AER and the output values
             x <- dwt.coefs.cv$response
 
-            if (resp == "phy")
-                Y <- phy.resp [subj, ] / 200
+            if (out == "phy")
+                Y <- phy.out [subj, ] / 200
             else
-                Y <- psycho.resp
+                Y <- psy.out
 
             y <- Y [dwt.coefs.cv$stimulus]
 
@@ -85,7 +85,7 @@ for (resp in response) {
 
     ## ** Save results
     save (file = file.path (results.dir,
-                            sprintf ("cross-validation-%s.dat", resp)),
+                            sprintf ("cross-validation-%s.dat", out)),
           cv.results, cv.df)
 
 } # resp
