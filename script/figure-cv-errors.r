@@ -25,26 +25,25 @@ source ("chisq-to-normal.r")
 source ("compare-methods.r")
 
 ### * Load system packages
-load.pkgs (c ("lme4", "lmerTest", "merTools", "emmeans"))
+load.pkgs (c ("lme4", "lmerTest", "merTools", "emmeans", "Cairo"))
 
 ## *** Open the PDF file
-pdf (file = file.path (figures.dir,"cv-errors.pdf"),
-     width = 12, height = 4.2)
+cairo_pdf (file = file.path (figures.dir,"cv-errors.pdf"),
+           width = 5, height = 7.5)
 
-layout (matrix (c (1, 2), ncol = 2))
+layout (matrix (seq (1, 4), ncol = 2, byrow = TRUE),
+        heights = c (0.84, 1), widths = c (1, 0.1))
 
-responses <- c ("phy", "psy")
+output <- c ("phy", "psy")
 
-title <- c ("PHY", "PSY")
+title <- list (phy = "Φ", psy = "Ψ")
 
-panel <- 1
-
-### * Loop over responses
-for (resp in responses) {
+### * Loop over output types
+for (out in output) {
 
     ## ** Load results of cross-validation
     load (file.path (results.dir,
-                     sprintf ("cross-validation-%s.dat", resp)))
+                     sprintf ("cross-validation-%s.dat", out)))
 
     ## ** Statistical analysis
 
@@ -84,30 +83,32 @@ for (resp in responses) {
     itv$inf <- (m - s * CI) ^ (1 / lbd)
     itv$sup <- (m + s * CI) ^ (1 / lbd)
 
-    min.v <- min (itv$inf)
-    max.v <- max (itv$sup)
+    min.v <- 0.02
+    max.v <- 0.14
 
     ## *** Plotting parameters
     pchs <- seq (21, 24)
     cols <- c ("red", "blue", "gold3", "green4")
 
-    par (mar = c (4, 4, 1, 0.1))
+    par (mar = c (ifelse (out == "phy", 0, 4), 4, 1, 0.1))
 
-    y.lab = ifelse (panel > 1, "","mean squared error" )
+    y.lab <- "mean squared error"
 
     ## *** Start plot without plotting
-    plot (itv$mean, ylim = c(min.v, max.v), las = 1, log = "y",
+    plot (itv$mean, ylim = c (min.v, max.v), las = 1, log = "y",
           ylab = y.lab, bty = "n", xaxt = "n",
-          xlab = "number of folds", type = "n", main = title[panel])
+          xlab = ifelse (out == "phy", "", "number of folds"),
+          type = "n")
 
     ## *** Plot regions for folds
     n <- length (methods)
     for (i in seq (1, length (cv.nb.folds)))
         polygon (i * n + c (-n + 0.5, -n + 0.5, 0.5, 0.5),
                  c (min.v, max.v, max.v, min.v), border = NA,
-                 col = ifelse (i %% 2 == 0, "white", "#00000020"))
-    axis (1, at = seq (0, length (cv.nb.folds) - 1) * n + (n + 1) / 2,
-          labels = cv.nb.folds)
+                 col = ifelse (i %% 2 == 1, "white", "#00000020"))
+    if (out == "psy")
+        axis (1, at = seq (0, length (cv.nb.folds) - 1) * n + (n + 1) / 2,
+              labels = cv.nb.folds)
 
     ## *** Plot data for each fold
     for (i in seq (1, nrow (itv)))
@@ -117,13 +118,17 @@ for (resp in responses) {
             pch = pchs [itv$method], bg = cols [itv$method])
 
     ## *** Legend
-    legend ("bottomright", ins = 0.05, pch = pchs, pt.bg = cols, pt.cex = 1.5,
-            bg = "white", legend = names (methods))
+    if (out == "psy")
+        legend ("bottom", ins = 0.05, pch = pchs, pt.bg = cols, pt.cex = 1.5,
+                bg = "white", legend = names (methods))
 
-    ## *** Increase counter
-    panel <- panel + 1
+    par (mar = c (ifelse (out == "phy", 0, 4), 0, 0, 0))
+    plot (0, 0, type = "n", bty = "n", xlab = "", ylab = "",
+          xaxt = "n", yaxt = "n")
+    text (0, 0, title [[out]], adj = c (0.5, 0.5), cex = 2.5)
 
-} # resp
+
+} # out
 
 ## ** Close PDF file
 dummy <- dev.off ()
