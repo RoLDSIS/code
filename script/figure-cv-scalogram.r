@@ -27,9 +27,6 @@ source ("dwt-lib.r")
 source ("compare-methods.r")
 source ("scalogram.r")
 
-### * Load the system packages
-load.pkgs ("multipanelfigure")
-
 response <- c ("phy","psy")
 title <- c("PHY","PSY")
 
