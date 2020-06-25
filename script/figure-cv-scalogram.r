@@ -27,28 +27,34 @@ source ("dwt-lib.r")
 source ("compare-methods.r")
 source ("scalogram.r")
 
-response <- c ("phy", "psy")
-title <- c ("PHY", "PSY")
+### * Load the system library
+load.pkgs ("Cairo")
 
-## ** Open the PDF file
-pdf (file = file.path (figures.dir, "cv-scalograms.pdf"),
-     width = 12, height = 4)
+response <- c ("phy", "psy")
+title <- list (phy = "Φ", psy = "Ψ")
+
+### * Open the PDF file
+cairo_pdf (file = file.path (figures.dir, "cv-scalograms.pdf"),
+           width = 8, height = 4)
+
+## ** Specify the panels
+layout (matrix (seq (1, 10), nrow = 2, byrow = TRUE),
+        widths = c (1.26, rep (1, 3), 0.2), heights = c (0.91, 1))
+
+### * Counter for panels
+panel <- 0
 
 ### * Loop over responses
 for (resp in response) {
 
-    ## ** Load the results of the cross-validation procedure
-    load (file.path (results.dir, sprintf ("cross-validation-%s.dat", resp)))
-
-    ## ** Specify the panels
-    layout (matrix (c (1, 2, 3, 4), nrow = 1),
-            widths = c (1, 1), heights = c (1, 1))
-
-    ## ** Counter for panels
-    panel <- 1
-
     ## ** Loop over the methods
     for (method in names (methods)) {
+
+        ## *** Increase counter
+        panel <- panel + 1
+
+        ## ** Load the results of the cross-validation procedure
+        load (file.path (results.dir, sprintf ("cross-validation-%s.dat", resp)))
 
         ## *** Cumulate the coefficients values per wavelet
         cf <- 0
@@ -70,15 +76,17 @@ for (resp in response) {
         cf <- sqrt (cf / length (cohort))
 
         ## *** Plot panel
-        plot.scalogram (vec.to.dwt (cf, dwt.length) , main = method,
-                        y.axis = ifelse (panel > 1, FALSE, TRUE))
-
-        ## *** Increase counter
-        panel <- panel + 1
+        plot.scalogram (vec.to.dwt (cf, dwt.length),
+                        main = ifelse (panel < 5, method, NA),
+                        x.axis = ifelse (panel > 4, TRUE, FALSE),
+                        y.axis = ifelse (panel == 1 | panel == 5, TRUE, FALSE))
 
     }
 
-    mtext (title [which (resp == response)], line = -2, outer = TRUE, cex = 1.5)
+    par (mar = c (ifelse (panel > 4, 5, 0), 0, ifelse (panel > 4, 0, 3), 0))
+    plot (0, 0, type = "n", bty = "n", xlab = "", ylab = "",
+          xaxt = "n", yaxt = "n")
+    text (0, 0, title [[resp]], adj = c (0.5, 0.5), cex = 3)
 
 } # resp
 
