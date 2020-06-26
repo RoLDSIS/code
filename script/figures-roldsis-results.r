@@ -169,9 +169,9 @@ cat ("\n")
 flush (stdout ())
 
 ### * Compose the PDF file with the results for all subjects
-system (sprintf ("pdftk %s/cv-projections-*-S*.pdf cat output %s/cv-projections-all.pdf",
+system (sprintf ("pdftk %s/cv-projections-S*.pdf cat output %s/cv-projections-all.pdf",
                  figures.dir, figures.dir))
-system (sprintf ("pdftk %s/cv-direction-*-S*.pdf cat output %s/cv-direction-all.pdf",
+system (sprintf ("pdftk %s/cv-direction-S*.pdf cat output %s/cv-direction-all.pdf",
                  figures.dir, figures.dir))
 
 ### * Compute angle between physical and psychophysical direction vectors
