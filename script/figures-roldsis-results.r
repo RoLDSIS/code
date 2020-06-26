@@ -63,7 +63,7 @@ for (subj in cohort) {
 
     ## *** Generate the scalogram figure
     cairo_pdf (file.path (figures.dir, sprintf ("cv-direction-S%02d.pdf", subj)),
-               width = 4, height = 5.84b)
+               width = 4, height = 5.84)
 
     layout (matrix (seq (1, 8), ncol = 2, byrow = TRUE),
             heights = c (1.5, 5.4, 1.5, 6.6),
