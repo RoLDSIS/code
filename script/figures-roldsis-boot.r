@@ -8,9 +8,10 @@ source ("directional.r")
 set.seed (1234)
 
 ### * Load system package
-load.pkgs (c ("wavelets", "MASS"))
+load.pkgs (c ("wavelets", "MASS", "Cairo"))
 
 output.type <- c ("phy", "psy")
+title <- list (phy = "Φ", psy = "Ψ")
 
 output.cols <- c ("red", "blue")
 
@@ -45,12 +46,12 @@ for (subj in cohort) {
         boot.result [[ot]] <- roldsis.boot (input, output [[ot]],
                                             boot.rep)
 
-    psy <- boot.result $ psy $ t
     phy <- boot.result $ phy $ t
+    psy <- boot.result $ psy $ t
 
     nb.items <- nrow (psy)
 
-    ang <- crt.to.sph (rbind (psy, phy))
+    ang <- crt.to.sph (rbind (phy, psy))
     pca <- prcomp (ang)
 
     cols <- rep (output.cols, rep (nb.items, 2))
@@ -58,8 +59,8 @@ for (subj in cohort) {
 
     pca.var <- sum (pca$sdev ^2)
 
-    pdf (file.path (figures.dir, sprintf ("lda-pca-S%02d.pdf", subj)),
-         width = 5, height = 5)
+    cairo_pdf (file.path (figures.dir, sprintf ("lda-pca-S%02d.pdf", subj)),
+               width = 5, height = 5)
     par (mar = c (5, 4, 0, 0) + 0.1)
     plot (pca$x [, 1], pca$x [, 2], pch = 19, col = cols.alpha,
           las = 1, asp = 1, bty = "n",
@@ -71,7 +72,7 @@ for (subj in cohort) {
     cf <- coefficients (z)
     abline (0, -cf [1] / cf [2], lwd = 2, col = "#00000060")
     legend ("bottomleft", ins = 0.05, pch = 19, col = output.cols,
-            legend = c ("psy", "phy"))
+            legend = c (title$phy, title$psy))
     dummy <- dev.off ()
 
     cat (sprintf ("Subject %02d: %3d misclassifications\n",
