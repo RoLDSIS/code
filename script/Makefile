@@ -22,7 +22,8 @@ FIGURES = ../figures/VOT-S09.pdf		\
           ../figures/cv-direction-S09.pdf	\
           ../figures/cv-projections-S09.pdf	\
           ../figures/cv-errors.pdf		\
-          ../figures/cv-scalograms.pdf	\
+          ../figures/cv-scalograms.pdf		\
+          ../figures/lda-pca-S09.pdf
 
 .PHONY: all
 all: $(FIGURES)
@@ -51,6 +52,10 @@ all: $(FIGURES)
 ### Fig. 6 of the manuscript
 ../figures/cv-scalograms.pdf: figure-cv-scalogram.r
 	Rscript figure-cv-scalogram.r
+
+### Fig x of the manuscript
+../figures/lda-pca-S09.pdf: figures-roldsis-boot.r
+	Rscript figures-roldsis-boot.r
 
 .PHONY: clean
 clean:
