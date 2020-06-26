@@ -180,10 +180,12 @@ for (i in cohort)
     ang  [i] <- acos (sum (direction$phy [i, ] * direction$psy [i, ])) * 180 / pi
 
 ### * Plot angles × slopes of subjects' psychometric curves
-pdf (file = file.path (figures.dir,
-                       sprintf ("%s-%s-slope-angle.pdf",
-                                cv.exp.feature, cv.exp.type)))
-plot (id.slope, ang, pch = 19, las = 1, ylab = "psy/phy angle", xlab = "slope (%/ms)",
-      main = sprintf ("%s %s", cv.exp.feature, cv.exp.type),)
+cairo_pdf (file = file.path (figures.dir,
+                             sprintf ("%s-%s-slope-angle.pdf",
+                                      cv.exp.feature, cv.exp.type))
+           , width = 4, height = 4)
+par (mar = c (5, 4, 0, 0) + 0.1)
+plot (id.slope, ang, bty = "n", pch = 19, las = 1, xlim = c (2, 11),
+      ylim = c (20, 70), ylab = "Φ/Ψ angle", xlab = "slope (%/ms)")
 abline (lm (ang ~ id.slope))
 dummy <- dev.off ()
