@@ -5,6 +5,8 @@ source ("dwt-lib.r")
 source ("roldsis-bootstrap.r")
 source ("directional.r")
 
+set.seed (1234)
+
 ### * Load system package
 load.pkgs (c ("wavelets", "MASS"))
 
