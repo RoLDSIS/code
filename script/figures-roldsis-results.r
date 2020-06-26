@@ -27,7 +27,7 @@ source ("cross-validation.r")
 source ("scalogram.r")
 
 ### * Load the system packages
-load.pkgs ("shape")
+load.pkgs (c ("shape", "Cairo"))
 
 ### * Load slopes of the psychometric curves
 load (file.path (results.dir, "id-slope.dat"))
@@ -39,6 +39,7 @@ cols <- rgb (t (cols / 255), alpha = 0.5)
 
 ### * Output types
 outputs <- c ("phy", "psy")
+title <- list (phy = "Φ", psy = "Ψ")
 
 ### * Specify the DWT coefficients on which the cross-validation will be done
 nb.wavelets <- 2 * length (dwt (rep (0, dwt.length))@W [[dwt.start.level]])
@@ -46,13 +47,13 @@ idx.wavelets <- seq (dwt.length - nb.wavelets + 1, dwt.length)
 
 ### * Settings for the position of the stimulus labels
 t <- seq (0, by = 1 / eeg.sampfreq, length.out = dwt.length)
-ang <- c (-1, 0.83, 0.3, 0.35, 0.55) * pi
+ang <- c (-0.7, -1, 0, 0.2, 0.5) * pi
 label.x <- cos (ang) * 0.05
-label.y <- sin (ang)
-search.lim <- round (c (0.1, 0.15) * eeg.sampfreq)
+label.y <- sin (ang) * 0.8
+search.lim <- round (c (0.25, 0.28) * eeg.sampfreq)
 search.idx <- seq (search.lim [1], search.lim [2])
 
-direction <- list ()
+direction <- signals <- list ()
 
 ### * Loop over the cohort
 for (subj in cohort) {
@@ -61,12 +62,12 @@ for (subj in cohort) {
     load (cv.filename (cv.exp.feature, cv.exp.type, subj))
 
     ## *** Generate the scalogram figure
-    pdf (file.path (figures.dir, sprintf ("cv-direction-S%02d.pdf", subj)),
-         width = 10 * 1.2, height = 3.5 * 1.2)
+    cairo_pdf (file.path (figures.dir, sprintf ("cv-direction-S%02d.pdf", subj)),
+               width = 4, height = 5.84b)
 
-    layout (matrix (c (1, 2, 3, 4), ncol = 2), heights = c (1.5, 6, 1.5, 6))
-
-    panel <- 1
+    layout (matrix (seq (1, 8), ncol = 2, byrow = TRUE),
+            heights = c (1.5, 5.4, 1.5, 6.6),
+            widths = c (1, 0.1))
 
     ### ** Loop over output types
     for (out in outputs) {
@@ -81,63 +82,66 @@ for (subj in cohort) {
         sol <- roldsis (folds$x, Y)
         dir <- sol$direction
         proj <- sol$projection
-        signals <- apply (proj, 1, function (x) vec.to.signal (x, dwt.length))
+        signals [[out]] <- apply (proj, 1, function (x) vec.to.signal (x, dwt.length))
 
-        direction [[out]] <- rbind(direction[[out]], t(dir))
+        direction [[out]] <- rbind (direction[[out]], t(dir))
 
         par (mar = c (0, 4, 0.75, 0) + 0.1)
 
         x <- vec.to.signal (dir, dwt.length)
         t <- seq (0, by = 1 / eeg.sampfreq, length.out = length (x))
         time.shift <- 0.024 * max (t)
-        plot (t, x, type = "l", bty = "n", lwd = 2, las = 1, xaxt = "n",
-              xlab = "", yaxt = "n", ylab = "", main = out,
+        plot (t, x, type = "l", bty = "n", lwd = 2, las = 1,
+              xaxt = "n", xlab = "", yaxt = "n", ylab = "",
               xlim = c (0, max (t)) + time.shift)
         abline (h = 0, col = "#00000080")
 
-        plot.scalogram (dwt (x), palette = palette.bwr,
-                        y.axis = ifelse (panel > 1, FALSE, TRUE))
+        par (mar = c (0, 0, 0, 0))
+        plot (0, 0, type = "n", bty = "n", xlab = "", ylab = "",
+              xaxt = "n", yaxt = "n")
 
-        ## *** Increase counter
-        panel <- panel + 1
+        plot.scalogram (dwt (x), palette = palette.bwr,
+                        x.axis = ifelse (out == "phy", FALSE, TRUE))
+
+        par (mar = c (ifelse (out == "phy", 0, 4), 0, 0, 0))
+        plot (0, 0, type = "n", bty = "n", xlab = "", ylab = "",
+              xaxt = "n", yaxt = "n")
+        text (0, 0, title [[out]], adj = c (0.5, 0.5), cex = 2)
+
 
     } ## out
 
     dummy <- dev.off ()
 
     ## *** Generate the time-domain projections figure
-    pdf (file.path (figures.dir,sprintf ("cv-projections-S%02d.pdf", subj)),
-         width = 12, height = 3)
+    cairo_pdf (file.path (figures.dir,sprintf ("cv-projections-S%02d.pdf", subj)),
+               width = 6, height = 6)
 
-    layout (matrix (c (1, 2), ncol = 2), heights = c (2, 2))
-    par (mar = c (4, 4, 1.1, 0) + 0.1)
-
-    panel <- 1
+    layout (matrix (seq (1, 4), ncol = 2, byrow = TRUE),
+            heights = c (0.74, 1), widths = c (1, 0.1))
 
     ### ** Loop over output types
     for (out in outputs) {
 
-        y.lim <- c (min (signals), max (signals)+5)
+        sig <- signals [[out]]
 
-        if (panel > 1){
-            y.lab <- ""
-            y.axis <- "n"
-        } else{
-            y.lab <- bquote ("amplitude (" * mu * "V)")
-            y.axis <- "s"
-        }
+        y.lim <- c (min (sig), max (sig) + 5)
 
+        par (mar = c (ifelse (out == "phy", 0, 5), 4, 0, 0) + 0.1)
         plot (0, 0, xlim = c (min (t), max (t)), ylim = y.lim, type = "n",
-              las = 1, col = cols [1], bty = "n", lwd = 2, main = out,
-              xlab = "time (s)", ylab = y.lab, yaxt = y.axis)
+              las = 1, col = cols [1], bty = "n", lwd = 2,
+              xlab = ifelse (out == "phy", "", "time (s)"),
+              ylab = "amplitude μV",
+              xaxt = ifelse (out == "phy", "n", "s"))
+
         for (i in seq (1, 5))
-            lines (t, signals [, i], col = cols [i], lwd = 2)
+            lines (t, sig [, i], col = cols [i], lwd = 2)
 
         label.idx <- (search.idx [1] - 1
-            + which.max (signals [search.idx, 5] - signals [search.idx, 1]))
+            + which.max (sig [search.idx, 5] - sig [search.idx, 1]))
 
         x.end <- rep (t [label.idx], 5)
-        y.end <- signals [label.idx, ]
+        y.end <- sig [label.idx, ]
         x.start <- x.end + label.x
         y.start <- y.end + label.y * diff (y.lim) / 3
 
@@ -145,8 +149,10 @@ for (subj in cohort) {
         points (x.start, y.start, cex = 4, pch = 21, bg = "white")
         text (x.start, y.start, labels = seq (1, 5), cex = 1.5)
 
-        ## *** Increase counter
-        panel <- panel + 1
+        par (mar = c (ifelse (out == "phy", 0, 4), 0, 0, 0))
+        plot (0, 0, type = "n", bty = "n", xlab = "", ylab = "",
+              xaxt = "n", yaxt = "n")
+        text (0, 0, title [[out]], adj = c (0.5, 0.5), cex = 2)
 
     } # out
 
