@@ -70,7 +70,7 @@ for (subj in cohort) {
     z <- lda (class ~ ., df)
     cf <- coefficients (z)
     abline (0, -cf [1] / cf [2], lwd = 2, col = "#00000060")
-    legend ("bottomright", ins = 0.05, pch = 19, col = output.cols,
+    legend ("bottomleft", ins = 0.05, pch = 19, col = output.cols,
             legend = c ("psy", "phy"))
     dummy <- dev.off ()
 
