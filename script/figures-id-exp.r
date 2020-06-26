@@ -90,17 +90,17 @@ for (feature in "VOT") {
         ## **** Cope with the case where the psychometric curve did not reach
         ## the value 0.05 for the first stimulus in the continuum.  The third
         ## stimulus in the continuum was taken as stim2
-        if (pred.resp [1] > psycho.resp [2])
+        if (pred.resp [1] > psy.out [2])
             interp.stim <- c (min (stim),
                               continuum [[feature]] (3),
-                              interp1 (pred.resp, pred.stim, psycho.resp [3:4]),
+                              interp1 (pred.resp, pred.stim, psy.out [3:4]),
                               max (stim))
         else
             interp.stim <- c (min (stim),
-                              interp1 (pred.resp, pred.stim, psycho.resp [2:4]),
+                              interp1 (pred.resp, pred.stim, psy.out [2:4]),
                               max (stim))
         axis (1, at = sapply (interp.stim, function (x) sprintf ("%.0f", x)))
-        points (interp.stim, psycho.resp, cex = 3, pch = 21, bg = stim.cols)
+        points (interp.stim, psy.out, cex = 3, pch = 21, bg = stim.cols)
 
         ## *** Cope with superposition of stim#2 on stim#1 and stim#4 on stim#5
         if ((interp.stim [2] - interp.stim [1])
@@ -119,8 +119,8 @@ for (feature in "VOT") {
             + shift.label [[feature]] * c (1, reflect.stim2, -2,
                                            reflect.stim4, -1))
         pos.end.x <- interp.stim
-        pos.beg.y <- psycho.resp + c (1, 1, 0, -1, -1) * 0.2
-        pos.end.y <- psycho.resp
+        pos.beg.y <- psy.out + c (1, 1, 0, -1, -1) * 0.2
+        pos.end.y <- psy.out
 
         pos.end.x <- pos.end.x - 0.35 * (pos.end.x - pos.beg.x)
         pos.end.y <- pos.end.y - 0.35 * (pos.end.y - pos.beg.y)
