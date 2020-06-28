@@ -96,6 +96,6 @@ set(gcf, 'papersize', [paperWidth paperHeight]);
 shift = 1.5;
 set(gcf, 'PaperPosition', [-shift -shift   paperWidth+1.75*shift paperHeight+1.75*shift]);
 
-print('fig_roldsis','-dpdf')
+print('../../figures/fig_roldsis','-dpdf')
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
