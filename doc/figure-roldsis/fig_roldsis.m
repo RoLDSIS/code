@@ -51,8 +51,8 @@ text(X(1,1),X(2,1),X(3,1)+0.1,'$\mathbf{x_1}$','Interpreter','latex');
 text(X(1,2),X(2,2),X(3,2)+0.1,'$\mathbf{x_2}$','Interpreter','latex');
 text(X(1,3),X(2,3)+0.06,X(3,3)-0.02,'$\mathbf{x_3}$','Interpreter','latex');
 text(M(1)+0.15,M(2)-0.06,M(3),'$\mathbf{m}$','Interpreter','latex');
-text(M(1)+V(1,1)*vector_size,M(2)+V(2,1)*vector_size,M(3)+V(3,1)*vector_size+0.1,'$\mathbf{z_1}$','Interpreter','latex');
-text(M(1)+V(1,2)*vector_size,M(2)+V(2,2)*vector_size,M(3)+V(3,2)*vector_size-0.06,'$\mathbf{z_2}$','Interpreter','latex');
+text(M(1)+V(1,1)*vector_size,M(2)+V(2,1)*vector_size,M(3)+V(3,1)*vector_size+0.1,'$\mathbf{v_1}$','Interpreter','latex');
+text(M(1)+V(1,2)*vector_size,M(2)+V(2,2)*vector_size,M(3)+V(3,2)*vector_size-0.06,'$\mathbf{v_2}$','Interpreter','latex');
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Solve the problem y = a + bx constrained to the plane spanned by X: c + dz 
 y1 = [1 7 9]';
