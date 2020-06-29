@@ -1,6 +1,27 @@
+% Script to plot fig_roldsis.pdf which illustrates the
+% RoLDSIS (Regression on Low Dimensional Spanned Input Space)
 %
-% Script to plot fig_roldsis.pdf which illustrates the RoLDSIS (Regression on Low
-% Dimensional Spanned Input Space
+% This program is part of RoLDSIS
+%
+% Copyright (C) 2020  Hani Camille Yehia
+% Copyright (C) 2020  Rafael Laboissière
+% Copyright (C) 2020  Adrielle de Carvalho Santana
+%
+% This program is free software: you can redistribute it and/or modify it
+% under the terms of the GNU General Public License as published by the
+% Free Software Foundation, either version 3 of the License, or (at your
+% option) any later version.
+%
+% This program is distributed in the hope that it will be useful, but
+% WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+% General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License along
+% with this program.  If not, see <http://www.gnu.org/licenses/>.
+%
+% This program uses the function arrow3.m (version 5.18) available at:
+% <https://www.mathworks.com/matlabcentral/fileexchange/14056-arrow3>
 %
 scale = 1;
 triangle_size = 1*scale;
@@ -45,7 +66,7 @@ plane_size = 4*scale;
 V1 = V(:,1);
 V2 = V(:,2);
 % Draw the plane spanned by X as a partially transparent rectangle.
-plane = M + [-V1+V2, V1+V2, V1-V2, -V1-V2]*plane_size; 
+plane = repmat(M,1,4) + [-V1+V2, V1+V2, V1-V2, -V1-V2]*plane_size; 
 h=fill3(plane(1,:)',plane(2,:)',plane(3,:)',[1 1 1]*0,'faceAlpha',0.2);
 text(X(1,1),X(2,1),X(3,1)+0.1,'$\mathbf{x_1}$','Interpreter','latex');
 text(X(1,2),X(2,2),X(3,2)+0.1,'$\mathbf{x_2}$','Interpreter','latex');
