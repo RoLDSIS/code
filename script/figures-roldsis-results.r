@@ -187,5 +187,10 @@ cairo_pdf (file = file.path (figures.dir,
 par (mar = c (5, 4, 0, 0) + 0.1)
 plot (id.slope, ang, bty = "n", pch = 19, las = 1, xlim = c (2, 11),
       ylim = c (20, 70), ylab = "Φ/Ψ angle", xlab = "slope (%/ms)")
-abline (lm (ang ~ id.slope))
+### ** Plot
+pca <- prcomp (cbind (id.slope, ang))
+### Gets slope of loading/eigenvector PC1
+b <- pca$rotation [2, 1] / pca$rotation [1, 1]
+a <- as.numeric (pca$center [2] - b * pca$center [1])
+abline (a, b)
 dummy <- dev.off ()
