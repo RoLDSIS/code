@@ -32,7 +32,7 @@ set.seed (0)
 ### * Values of the physical feature in the stimuli continua
 ### VOT: initial = -52ms, final = 17ms
 ### Formantes: initial = 533 Hz, final = 1387 Hz
-continuum <- list (VOT = function (x) -52 + 69 * (x - 1) / 199,
+continuum <- list (VOT = function (x) -52 + 68 * (x - 1) / 199,
                    Formantes = function (x) 533 + 854 * (x - 1) / 199)
 
 ### * Parameters for plotting
