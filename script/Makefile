@@ -31,45 +31,45 @@ FIGURES = ../figures/VOT-S09.pdf		\
 .PHONY: all
 all: $(FIGURES)
 
-### Fig. 1 of the manuscript
+### Fig. 1 and 2 of the manuscript
 ###../figures/fig_roldsis.pdf: ../doc/figure-roldsis/fig_roldsis.m
 ###	octave fig_roldsis.m
 
 ### Fig. 2 of the manuscript
+###../figures/fig_phy_psy_angle.pdf: ../doc/figure-roldsis/fig_phy_psy_angle.m
+###	octave fig_phy_psy_angle.m
+
+### Fig. 3 of the manuscript
 ../figures/VOT-S09.pdf ../results/id-slope.dat: figures-id-exp.r
 	Rscript figures-id-exp.r
 
-### Fig. 3 of the manuscript
+### Fig. 4 of the manuscript
 ../figures/erp-VOT-Ativo-S09.pdf: figures-mean-erp.r
 	Rscript figures-mean-erp.r
 
-### Figs. 4, 5 and 8 of the manuscript
+### Fig. 5 of the manuscript
+../figures/points-average.pdf: figure-points-average.r
+	Rscript figure-points-average.r
+
+### Figs. 6, 7 and 9 of the manuscript
 ../figures/cv-direction-S09.pdf	\
 ../figures/cv-projection-S09.pdf \
 ../figures/VOT-Ativo-slope-angle.pdf: figures-roldsis-results.r ../results/id-slope.dat
 	Rscript figures-roldsis-results.r
 
-### Fig 6 of the manuscript
+### Fig 8 of the manuscript
 ../figures/lda-pca-S09.pdf: figures-roldsis-boot.r
 	Rscript figures-roldsis-boot.r
 
-### Fig. points-average.pdf
-../figures/points-average.pdf: figure-points-average.r
-	Rscript figure-points-average.r
-
-### Fig. 7 of the manuscript
-###../figures/fig_phy_psy_angle.pdf: ../doc/figure-roldsis/fig_phy_psy_angle.m
-###	octave fig_phy_psy_angle.m
-
-### Cross-validation results
+### Cross-validation 
 ../results/cross-validation-phy.dat ../results/cross-validation-psy.dat: run-cv.r
 	Rscript run-cv.r
 
-### Fig. 9 of the manuscript
+### Fig. 10 of the manuscript
 ../figures/cv-errors.pdf: figure-cv-errors.r ../results/cross-validation-psy.dat
 	Rscript figure-cv-errors.r
 
-### Fig. 10 of the manuscript
+### Fig. 11 of the manuscript
 ../figures/cv-scalograms.pdf: figure-cv-scalogram.r
 	Rscript figure-cv-scalogram.r
 
