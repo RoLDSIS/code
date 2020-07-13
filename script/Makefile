@@ -24,7 +24,9 @@ FIGURES = ../figures/VOT-S09.pdf		\
           ../figures/lda-pca-S09.pdf		\
           ../figures/VOT-Ativo-slope-angle.pdf	\
           ../figures/cv-errors.pdf		\
-          ../figures/cv-scalograms.pdf		
+          ../figures/cv-scalograms.pdf		\
+          ../figures/points-average.pdf		
+
 
 .PHONY: all
 all: $(FIGURES)
@@ -50,6 +52,10 @@ all: $(FIGURES)
 ### Fig 6 of the manuscript
 ../figures/lda-pca-S09.pdf: figures-roldsis-boot.r
 	Rscript figures-roldsis-boot.r
+
+### Fig. points-average.pdf
+../figures/points-average.pdf: figure-points-average.r
+	Rscript figure-points-average.r
 
 ### Fig. 7 of the manuscript
 ###../figures/fig_phy_psy_angle.pdf: ../doc/figure-roldsis/fig_phy_psy_angle.m

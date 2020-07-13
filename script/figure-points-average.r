@@ -1,5 +1,6 @@
-library (limSolve)
 source ("paths.r")
+
+load.pkgs ("limSolve")
 
 fold <- function (x, n) {
     ret <- c ()
@@ -57,7 +58,7 @@ for (subj in cohort) {
 }
 
 m <- aggregate(rms ~ fold.size, results, mean)
-std <- aggregate(rms ~ fold.size, results, std)
+std <- aggregate(rms ~ fold.size, results, sd)
 
 pdf (file = file.path (figures.dir, "points-average.pdf"),
      width = 5, height = 5)
