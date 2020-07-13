@@ -68,7 +68,7 @@ par (mar = c (5, 4, 0, 0) + 0.1)
 plot (m$fold.size [1 : 6], m$rms [1 : 6], pch = 16, cex = 2, ylim = c(0,.4),
       xlim = c (0.5, 6.5), bty = "n", las = 1,
       ylab = "RMS prediction error",
-      xlab = "number of points per grouping")
+      xlab = "points per average")
 
 for (i in seq (1,6))
     lines (rep (std$fold.size[i], 2), m$rms [i] + c(-1, 1) * std$rms [i], lwd = 3)
