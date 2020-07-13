@@ -67,7 +67,7 @@ make
 * [figures-mean-erp.r](script/figures-mean-erp.r)
 * [figures-roldsis-results.r](script/figures-roldsis-results.r)
 * [figures-id-exp.r](script/figures-id-exp.r)
-* [figures-points-average.r](script/figures-points-average.r)
+* [figure-points-average.r](script/figures-points-average.r)
 
 ### Data
 
