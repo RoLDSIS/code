@@ -65,8 +65,8 @@ pdf (file = file.path (figures.dir, "points-average.pdf"),
 
 par (mar = c (5, 4, 0, 0) + 0.1)
 
-plot (m$fold.size[1:6], m$rms[1:6], pch = 19, cex = 2, ylim = c(0,.4),
-      xlim = c (0.5,6.5), bty = "n", las = 1,
+plot (m$fold.size [1 : 6], m$rms [1 : 6], pch = 16, cex = 2, ylim = c(0,.4),
+      xlim = c (0.5, 6.5), bty = "n", las = 1,
       ylab = "RMS prediction error",
       xlab = "number of points per grouping")
 
