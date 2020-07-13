@@ -82,7 +82,7 @@ make
 * `cv-projections-Snn.pdf`: RoLDSIS projected responses for subject nn
 * `cv-errors.pdf`: Cross-validation errors for RoLDSIS, LASSO, Ridge Regression, and SPLS
 * `cv-scalograms.pdf`: Histograms for the regression methods of regressed coefficients
-* `points-average.pdf`: RMS prediction error for all subjects using different number averaged points
+* `points-average.pdf`: RMS prediction error for all subjects using different number of averaged points
 
 ## Licensing conditions
 
