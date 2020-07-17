@@ -186,7 +186,7 @@ cairo_pdf (file = file.path (figures.dir,
            , width = 4, height = 4)
 par (mar = c (5, 4, 0, 0) + 0.1)
 plot (id.slope, ang, bty = "n", pch = 19, las = 1, xlim = c (2, 11),
-      ylim = c (20, 70), ylab = "Φ/Ψ angle", xlab = "slope (%/ms)")
+      ylim = c (20, 70), ylab = "Φ/Ψ angle (degrees)", xlab = "slope (%/ms)")
 ### ** Plot
 pca <- prcomp (cbind (id.slope, ang))
 ### Gets slope of loading/eigenvector PC1
