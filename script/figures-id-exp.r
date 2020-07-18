@@ -69,9 +69,9 @@ for (feature in "VOT") {
         ## *** Plot the experimental points, with jitter in the y axis
         plot (stim, resp + rnorm (length (resp), sd = 0.03), pch = 16,
               col = "#00000050", bty = "n", las = 1, xaxt = "n", yaxt = "n",
-              xlab = x.label [[feature]],
-              ylab = sprintf ("proportion of %s responses", y.label [[feature]]))
-        axis (2, at = c (0, 0.5, 1), las = 1)
+              xlab = x.label [[feature]], yaxt = "n",
+              ylab = sprintf ("percentage of %s response", y.label [[feature]]))
+        axis (2, at = c (0, 0.5, 1), labels = c (0, 50, 100), las = 1)
 
         ## *** Fit the psychometric model
         df <- data.frame (stim = stim, resp = resp)
