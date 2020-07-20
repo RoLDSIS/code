@@ -21,56 +21,66 @@ results <- data.frame (subject = integer (),
                        fold.size = integer (),
                        nb.points = integer (),
                        rms = numeric ())
+### * Output types
+outputs <- c ("phy", "psy")
+for (out in outputs) {
+    
+    for (subj in cohort) {
+
+        load (cv.filename ("VOT", "Ativo", subj))
+
+        s <- dwt.coefs.cv$stimulus
+        r <- dwt.coefs.cv$response
 
 
-for (subj in cohort) {
+        if (out == "phy")
+            Y <- phy.out [subj, ] / 200
+        else
+            Y <- psy.out
 
-    load (cv.filename ("VOT", "Ativo", subj))
+        for (n in seq (1, 10)) {
 
-    s <- dwt.coefs.cv$stimulus
-    r <- dwt.coefs.cv$response
+            s2 <- r2 <- c ()
 
-    for (n in seq (1, 10)) {
+            for (i in seq (1, 5)) {
+                idx <- which (s == i)
+                ri <- fold (r [idx,], n)
+                s2 <- c (s2, rep (i, nrow (ri)))
+                r2 <- rbind (r2, ri)
+            }
 
-        s2 <- r2 <- c ()
+            if (length (s2) < ncol (r2))
+                break
 
-        for (i in seq (1, 5)) {
-            idx <- which (s == i)
-            ri <- fold (r [idx,], n)
-            s2 <- c (s2, rep (i, nrow (ri)))
-            r2 <- rbind (r2, ri)
+            x <- cbind (r2, rep (1, nrow (r2)))
+            y <- Y [s2]
+            b <- Solve (x, y)
+
+            results <- rbind (results,
+                              data.frame (subject = subj,
+                                          fold.size = n,
+                                          nb.points = length (s2),
+                                          rms = sqrt (mean ((y - x %*% b)^2))))
         }
 
-        if (length (s2) < ncol (r2))
-            break
-
-        x <- cbind (r2, rep (1, nrow (r2)))
-        y <- c (0, 0.05, 0.5, 0.95, 1) [s2]
-        b <- Solve (x, y)
-
-        results <- rbind (results,
-                          data.frame (subject = subj,
-                                      fold.size = n,
-                                      nb.points = length (s2),
-                                      rms = sqrt (mean ((y - x %*% b)^2))))
     }
 
+    m <- aggregate(rms ~ fold.size, results, mean)
+    std <- aggregate(rms ~ fold.size, results, sd)
+
+    pdf (file = file.path (figures.dir, sprintf("trials-observation-%s.pdf",out)),
+         width = 5, height = 5)
+
+    par (mar = c (5, 4, 0, 0) + 0.1)
+
+    plot (m$fold.size [1 : 6], m$rms [1 : 6], pch = 16, cex = 2, ylim = c(0,.4),
+          xlim = c (0.5, 6.5), bty = "n", las = 1,
+          ylab = "RMS prediction error",
+          xlab = "trials per observation")
+
+    for (i in seq (1,6))
+        lines (rep (std$fold.size[i], 2), m$rms [i] + c(-1, 1) * std$rms [i], lwd = 3)
+
+    dummy <- dev.off ()
 }
 
-m <- aggregate(rms ~ fold.size, results, mean)
-std <- aggregate(rms ~ fold.size, results, sd)
-
-pdf (file = file.path (figures.dir, "trials-observation.pdf"),
-     width = 5, height = 5)
-
-par (mar = c (5, 4, 0, 0) + 0.1)
-
-plot (m$fold.size [1 : 6], m$rms [1 : 6], pch = 16, cex = 2, ylim = c(0,.4),
-      xlim = c (0.5, 6.5), bty = "n", las = 1,
-      ylab = "RMS prediction error",
-      xlab = "trials per observation")
-
-for (i in seq (1,6))
-    lines (rep (std$fold.size[i], 2), m$rms [i] + c(-1, 1) * std$rms [i], lwd = 3)
-
-dummy <- dev.off ()
