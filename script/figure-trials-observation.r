@@ -33,11 +33,12 @@ for (out in outputs) {
         r <- dwt.coefs.cv$response
 
 
-        if (out == "phy")
+        if (out == "phy"){
             Y <- phy.out [subj, ] / 200
-        else
+        } else{
             Y <- psy.out
-
+        }
+        
         for (n in seq (1, 10)) {
 
             s2 <- r2 <- c ()
