@@ -17,13 +17,14 @@ fold <- function (x, n) {
     return (ret)
 }
 
-results <- data.frame (subject = integer (),
-                       fold.size = integer (),
-                       nb.points = integer (),
-                       rms = numeric ())
 ### * Output types
 outputs <- c ("phy", "psy")
 for (out in outputs) {
+
+    results <- data.frame (subject = integer (),
+                           fold.size = integer (),
+                           nb.points = integer (),
+                           rms = numeric ())
 
     for (subj in cohort) {
 
