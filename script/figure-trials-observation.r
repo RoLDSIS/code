@@ -24,7 +24,7 @@ results <- data.frame (subject = integer (),
 ### * Output types
 outputs <- c ("phy", "psy")
 for (out in outputs) {
-    
+
     for (subj in cohort) {
 
         load (cv.filename ("VOT", "Ativo", subj))
@@ -38,7 +38,7 @@ for (out in outputs) {
         } else{
             Y <- psy.out
         }
-        
+
         for (n in seq (1, 10)) {
 
             s2 <- r2 <- c ()
