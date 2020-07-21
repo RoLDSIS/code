@@ -17,8 +17,9 @@ fold <- function (x, n) {
     return (ret)
 }
 
-### * Output types
+### Output types
 outputs <- c ("phy", "psy")
+
 for (out in outputs) {
 
     results <- data.frame (subject = integer (),
@@ -68,10 +69,11 @@ for (out in outputs) {
 
     }
 
-    m <- aggregate(rms ~ fold.size, results, mean)
-    std <- aggregate(rms ~ fold.size, results, sd)
+    m <- aggregate (rms ~ fold.size, results, mean)
+    std <- aggregate (rms ~ fold.size, results, sd)
 
-    pdf (file = file.path (figures.dir, sprintf("trials-observation-%s.pdf",out)),
+    pdf (file = file.path (figures.dir,
+                           sprintf ("trials-observation-%s.pdf", out)),
          width = 5, height = 5)
 
     par (mar = c (5, 4, 0, 0) + 0.1)
@@ -85,7 +87,8 @@ for (out in outputs) {
           xlab = "trials per observation")
 
     for (i in seq (1,6))
-        lines (rep (std$fold.size[i], 2), m$rms [i] + c(-1, 1) * std$rms [i], lwd = 3)
+        lines (rep (std$fold.size [i], 2), m$rms [i] + c(-1, 1) * std$rms [i],
+               lwd = 3)
 
     dummy <- dev.off ()
 }
