@@ -1,5 +1,6 @@
 source ("paths.r")
 
+### * Load the system packages
 load.pkgs ("limSolve")
 
 fold <- function (x, n) {
@@ -19,6 +20,12 @@ fold <- function (x, n) {
 
 ### Output types
 outputs <- c ("phy", "psy")
+title <- list (phy = "Φ", psy = "Ψ")
+
+cairo_pdf (file = file.path (figures.dir,"trials-observation.pdf"),
+           width = 10, height = 5)
+
+par(mfrow=c(1,2))
 
 for (out in outputs) {
 
@@ -76,15 +83,14 @@ for (out in outputs) {
     m <- aggregate (rms ~ fold.size, results, mean)
     std <- aggregate (rms ~ fold.size, results, sd)
 
-    pdf (file = file.path (figures.dir,
-                           sprintf ("trials-observation-%s.pdf", out)),
-         width = 5, height = 5)
+    par (mar = c (5, 4, 0, 1) + 0.1)
 
-    par (mar = c (5, 4, 0, 0) + 0.1)
+    ylm = c (0, max (m$rms + std$rms)+0.1)
+    xlm = c (0.5, 6.5)
 
     plot (m$fold.size [1 : 6], m$rms [1 : 6], pch = 16, cex = 2,
-          ylim = c (0, max (m$rms + std$rms)),
-          xlim = c (0.5, 6.5), bty = "n", las = 1,
+          ylim = ylm,
+          xlim = xlm, bty = "n", las = 1,
           ylab = paste ("RMS prediction error",
                         ifelse (out == "phy", " (ms)", ""),
                         sep = ""),
@@ -94,6 +100,7 @@ for (out in outputs) {
         lines (rep (std$fold.size [i], 2), m$rms [i] + c(-1, 1) * std$rms [i],
                lwd = 3)
 
-    dummy <- dev.off ()
+    text (max(xlm/2),  max(ylm), title [[out]], adj = c (0.5, 0.5), cex = 2)
 }
 
+dummy <- dev.off ()
