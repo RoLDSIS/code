@@ -42,7 +42,8 @@ for (out in outputs) {
         else
             Y <- psy.out
 
-        for (n in seq (1, 10)) {
+        n <- 1
+        while (TRUE) {
 
             s2 <- r2 <- c ()
 
@@ -65,6 +66,9 @@ for (out in outputs) {
                                           fold.size = n,
                                           nb.points = length (s2),
                                           rms = sqrt (mean ((y - x %*% b)^2))))
+
+            n <- n + 1
+
         }
 
     }
