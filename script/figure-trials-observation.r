@@ -34,11 +34,12 @@ for (out in outputs) {
         r <- dwt.coefs.cv$response
 
 
-        if (out == "phy"){
-            Y <- phy.out [subj, ] / 200
-        } else{
+        if (out == "phy") {
+            ## FIXME : the value 68 (= 16 - (-52)) is hardcoded below, but
+            ## should be obtained programatically
+            Y <- 68 * phy.out [subj, ] / 200
+        else
             Y <- psy.out
-        }
 
         for (n in seq (1, 10)) {
 
@@ -75,9 +76,12 @@ for (out in outputs) {
 
     par (mar = c (5, 4, 0, 0) + 0.1)
 
-    plot (m$fold.size [1 : 6], m$rms [1 : 6], pch = 16, cex = 2, ylim = c(0,.4),
+    plot (m$fold.size [1 : 6], m$rms [1 : 6], pch = 16, cex = 2,
+          ylim = c (0, max (m$rms + std$rms)),
           xlim = c (0.5, 6.5), bty = "n", las = 1,
-          ylab = "RMS prediction error",
+          ylab = paste ("RMS prediction error",
+                        ifelse (out == "phy", " (ms)", ""),
+                        sep = ""),
           xlab = "trials per observation")
 
     for (i in seq (1,6))
