@@ -34,7 +34,7 @@ for (out in outputs) {
         r <- dwt.coefs.cv$response
 
 
-        if (out == "phy") {
+        if (out == "phy")
             ## FIXME : the value 68 (= 16 - (-52)) is hardcoded below, but
             ## should be obtained programatically
             Y <- 68 * phy.out [subj, ] / 200
