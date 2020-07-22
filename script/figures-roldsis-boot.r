@@ -20,7 +20,7 @@ boot.rep <- 100
 ef <- "VOT"
 et <- "Ativo"
 
-boot.result <- list ()
+boot.result <- pca.all <- list ()
 
 for (subj in cohort) {
 
@@ -53,6 +53,7 @@ for (subj in cohort) {
 
     ang <- crt.to.sph (rbind (phy, psy))
     pca <- prcomp (ang)
+    pca.all [[subj]] <- pca
 
     cols <- rep (output.cols, rep (nb.items, 2))
     cols.alpha <- rgb (t (col2rgb (cols) / 255), alpha = 0.5)
@@ -78,6 +79,12 @@ for (subj in cohort) {
     cat (sprintf ("Subject %02d: %3d misclassifications\n",
                   subj, length (which (predict (z) $ class != class))))
 
+}
+
+var12 <- c ()
+for (i in seq (1, length (pca.all))) {
+    sdev <- pca.all [[i]]$sdev
+    var12 [i] <- (sdev [1] ^ 2 + sdev [2] ^ 2) / sum (sdev ^ 2)
 }
 
 cat ("\n")
