@@ -85,7 +85,7 @@ for (out in outputs) {
 
     par (mar = c (5, 4, 0, 1) + 0.1)
 
-    ylm = c (0, max (m$rms + std$rms)+0.1)
+    ylm = c (0, max (m$rms + std$rms))
     xlm = c (0.5, 6.5)
 
     plot (m$fold.size [1 : 6], m$rms [1 : 6], pch = 16, cex = 2,
@@ -96,11 +96,12 @@ for (out in outputs) {
                         sep = ""),
           xlab = "trials per observation")
 
-    for (i in seq (1,6))
-        lines (rep (std$fold.size [i], 2), m$rms [i] + c(-1, 1) * std$rms [i],
+    for (i in seq (1, 6))
+        lines (rep (std$fold.size [i], 2), m$rms [i] + c (-1, 1) * std$rms [i],
                lwd = 3)
 
-    text (max(xlm/2),  max(ylm), title [[out]], adj = c (0.5, 0.5), cex = 2)
+    text (0.8 * max (xlm),  0.9 * max (ylm), title [[out]], adj = c (1, 1),
+          cex = 2)
 }
 
 dummy <- dev.off ()
