@@ -115,7 +115,7 @@ for (subj in cohort) {
 
     ## *** Generate the time-domain projections figure
     cairo_pdf (file.path (figures.dir,sprintf ("cv-projections-S%02d.pdf", subj)),
-               width = 6, height = 6)
+               width = 4, height = 4)
 
     layout (matrix (seq (1, 4), ncol = 2, byrow = TRUE),
             heights = c (0.74, 1), widths = c (1, 0.1))

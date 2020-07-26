@@ -23,7 +23,7 @@ outputs <- c ("phy", "psy")
 title <- list (phy = "Φ", psy = "Ψ")
 
 cairo_pdf (file = file.path (figures.dir,"trials-observation.pdf"),
-           width = 10, height = 5)
+           width = 8, height = 4)
 
 par(mfrow=c(1,2))
 
