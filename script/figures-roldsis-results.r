@@ -145,9 +145,9 @@ for (subj in cohort) {
         x.start <- x.end + label.x
         y.start <- y.end + label.y * diff (y.lim) / 3
 
-        Arrows (x.start, y.start, x.end, y.end, arr.adj = 1)
-        points (x.start, y.start, cex = 4, pch = 21, bg = "white")
-        text (x.start, y.start, labels = seq (1, 5), cex = 1.5)
+        Arrows (x.start, y.start, x.end, y.end, arr.adj = 1, arr.length = 0.25)
+        points (x.start, y.start, cex = 3, pch = 21, bg = "white")
+        text (x.start, y.start, labels = seq (1, 5), cex = 1)
 
         par (mar = c (ifelse (out == "phy", 0, 4), 0, 0, 0))
         plot (0, 0, type = "n", bty = "n", xlab = "", ylab = "",
