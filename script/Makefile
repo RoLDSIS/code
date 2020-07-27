@@ -25,8 +25,7 @@ FIGURES = ../figures/VOT-S09.pdf		\
           ../figures/VOT-Ativo-slope-angle.pdf	\
           ../figures/cv-errors.pdf		\
           ../figures/cv-scalograms.pdf		\
-          ../figures/points-average.pdf		
-
+          ../figures/trials-observation.pdf
 
 .PHONY: all
 all: $(FIGURES)
