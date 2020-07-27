@@ -48,8 +48,8 @@ all: $(FIGURES)
 	Rscript figures-mean-erp.r
 
 ### Fig. 5 of the manuscript
-../figures/points-average.pdf: figure-points-average.r
-	Rscript figure-points-average.r
+../figures/trials-observation.pdf: figure-trials-observation.r
+	Rscript figure-trials-observation.r
 
 ### Figs. 6, 7 and 9 of the manuscript
 ../figures/cv-direction-S09.pdf	\
