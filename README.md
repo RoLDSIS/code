@@ -74,7 +74,7 @@ make
 * [VOT/Snn.dat](data/identification/VOT/): Results from the phonemic identification task
 * [Snn/cross-validation.dat](data/la8-2048-8/VOT/Ativo/): Raw EEG data
 
-## Description of generated figures:
+## Description of the generated figures:
 
 * `psy-VOT-Snn.pdf`: Results of phonemic identification experiment for subject nn
 * `erp-VOT-Ativo-Snn.pdf`: Average ERPs for the five stimuli for subject nn
