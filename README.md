@@ -84,6 +84,11 @@ make
 * `cv-scalograms.pdf`: Histograms for the regression methods of regressed coefficients
 * `trials-observation.pdf`: RMS prediction error for all subjects using different number of averaged points
 
+## Documentation
+
+* [doc/RoLDSIS.pdf](doc/RoLDSIS.pdf): Early version of the paper describing
+  the method
+
 ## Licensing conditions
 
 The files in this repository are made available under the conditions of the
