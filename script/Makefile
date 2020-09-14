@@ -60,7 +60,7 @@ all: $(FIGURES)
 ../figures/lda-pca-S09.pdf: figures-roldsis-boot.r
 	Rscript figures-roldsis-boot.r
 
-### Cross-validation 
+### Cross-validation
 ../results/cross-validation-phy.dat ../results/cross-validation-psy.dat: run-cv.r
 	Rscript run-cv.r
 
