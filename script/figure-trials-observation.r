@@ -1,3 +1,4 @@
+### * Load local library
 source ("paths.r")
 
 ### * Load the system packages
