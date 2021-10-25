@@ -8,7 +8,12 @@ for “Regression on Low-Dimension Spanned Input Space”.  The data for an
 electroencephalography (EEG) experiment involving phonemic identification
 is included in the repository.  The scripts in the R language, for
 processing and analysing the data, as well as producing the figures that
-appear in the manuscript.
+appear in the following article:
+
+> Santana, A., Barbosa A., Yehia H., and Laboissière R. (2021) A
+dimension reduction technique applied to regression on high dimension,
+low sample size neurophysiological data sets. BMC Neurosci 22(1). DOI:
+[10.1186/s12868-020-00605-0](http://dx.doi.org/10.1186/s12868-020-00605-0).
 
 ## Installation
 
