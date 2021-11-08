@@ -99,9 +99,7 @@ make
 The files in this repository are made available under the conditions of the
 [GNU Public License, version 3 or later](COPYING).  No warranties.  The
 RolDSIS has been submitted for publication. If you use the software or the
-data of this repository, please give credit.  Stay tuned for more
-information on the eventual acceptation for publication of the manuscript .
-
+data of this repository, please give credit.
 
 ## Authors
 
