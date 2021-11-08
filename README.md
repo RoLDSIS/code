@@ -47,7 +47,7 @@ make
 
 ### Scripts containing supporting functions and general parameters definition
 
-* [paths.r](script/paths.r): Definition pf paths for saving figures and results
+* [paths.r](script/paths.r): Definition of paths for saving figures and results
 * [dwt-parameters.r](script/dwt-parameters.r): Definition of DWT parameters
 * [geom-lib.r](script/geom-lib.r): Geometry supporting function
 * [dwt-lib.r](script/dwt-lib.r): DWT supporting functions
